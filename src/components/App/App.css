@@ -4,7 +4,8 @@
   align-items: center;
   justify-content: space-between;
   background-color: #202020;
-  height: 100%;
+  min-height: 100vh;
+  width: 100%;
   color: white;
   font-family: 'Inter', 'Arial', 'Helvetica', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -12,8 +13,11 @@
 }
 
 .indent {
-  padding: 0 70px;
-  box-sizing: border-box;
+  /* padding: 0 70px;
+  box-sizing: border-box; */
+  max-width: 1140px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .opacity {
@@ -23,4 +27,28 @@
 
 .opacity:hover {
   opacity: .7;
+}
+
+@media screen and (max-width: 1200px) {
+  .indent {
+    max-width: 750px;
+  }
+}
+
+@media screen and (max-width: 890px) {
+  .indent {
+    max-width: 708px;
+  }
+}
+
+/* @media screen and (max-width: 890px) {
+  .indent {
+    padding: 0 30px;
+  }
+} */
+
+@media screen and (max-width: 767px) {
+  .indent {
+    max-width: 300px;
+  }
 }
