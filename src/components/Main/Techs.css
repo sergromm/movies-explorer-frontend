@@ -1,8 +1,15 @@
 .techs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: calc(100% + 120px);
   padding: 100px 70px;
   background-color: #272727;
   box-sizing: border-box;
+}
+
+.techs__container {
+  width: 100%;
 }
 
 .techs__list-container {
@@ -10,8 +17,8 @@
   justify-content: center;
   align-items: center;
   max-width: 690px; /* изменить для меньших разрешений */
-  margin: 0 auto;
-  
+  width: 100%;
+  margin: 0;
 }
 
 .techs__wrapper {
@@ -57,7 +64,7 @@
 @media screen and (max-width: 1024px) {
   .techs {
     width: calc(100% + 60px);
-    padding: 100px 30px; 
+    padding: 100px 30px;
   }
   .techs__list {
     grid-template-columns: repeat(auto-fill, 84px);
@@ -71,8 +78,15 @@
   }
 }
 
+@media screen and (max-width: 532px) {
+  .techs__list {
+    max-width: 178px;
+  }
+}
+
 @media screen and (max-width: 425px) {
   .techs {
+    width: calc(100% + 20px);
     padding: 100px 10px;
   }
   .techs__list-container {

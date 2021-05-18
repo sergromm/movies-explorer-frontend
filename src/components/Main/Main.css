@@ -21,3 +21,15 @@
   line-height: 1.16;
   letter-spacing: -0.04em;
 }
+
+@media screen and (max-width: 1024px) {
+  .title-text {
+    font-size: 40px;
+  }
+}
+
+@media screen and (max-width: 532px) {
+  .title-text {
+    font-size: 30px;
+  }
+}

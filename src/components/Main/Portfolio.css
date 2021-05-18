@@ -46,11 +46,20 @@
 }
 
 @media screen and (max-width: 425px) {
+  .portfolio {
+    margin-bottom: 70px;
+  }
+
+  .portfolio__title {
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
   .portfolio__text {
     font-size: 18px;
   }
 
   .portfolio__text_arrow {
-    padding-top: 3  px;
+    padding-top: 3 px;
   }
 }
