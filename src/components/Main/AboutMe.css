@@ -1,17 +1,19 @@
 .about-me {
   margin: 110px 0 101px;
+  width: 100%;
 }
 
 .about-me__container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  
   margin-top: 66px;
 }
 
 .about-me__wrapper {
   max-width: 600px;
-  margin-right: auto;
+  margin-right: 49px;
 }
 
 .about-me__name {
@@ -57,4 +59,11 @@
   max-height: 327px;
   width: 100%;
   height: 100%;
+}
+
+
+@media screen and (max-width: 582px) {
+  .about-me__container {
+    flex-direction: column-reverse;
+  }
 }

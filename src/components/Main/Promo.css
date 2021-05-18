@@ -1,8 +1,9 @@
 .promo {
   min-height: 513px;
-  width: 100%;
-  padding: 20px 40px 0;
+  width: calc(100% + 60px);
+  padding: 20px 0 0;
   box-sizing: border-box;
+  transition: 1s;
 }
 
 .promo__container {
@@ -38,4 +39,17 @@
   background-color: #303030;
   padding: 10px 17px;
   border-radius: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .promo {
+    width: calc(100% + 10px);
+    padding: 20px 0 0;
+  }
+}
+@media screen and (max-width: 425px) {
+  .promo {
+    width: calc(100% + 10px);
+    padding: 14px 0 0;
+  }
 }

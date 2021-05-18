@@ -1,4 +1,5 @@
 .portfolio {
+  width: 100%;
   margin-bottom: 125px;
 }
 
@@ -42,4 +43,14 @@
 
 .portfolio__text_arrow {
   padding-top: 6px;
+}
+
+@media screen and (max-width: 425px) {
+  .portfolio__text {
+    font-size: 18px;
+  }
+
+  .portfolio__text_arrow {
+    padding-top: 3  px;
+  }
 }

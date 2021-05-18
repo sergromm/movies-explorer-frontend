@@ -1,20 +1,16 @@
+import React from 'react';
 import './MoviesCardList.css';
 import MovieCard from '../MovieCard/MovieCard';
 import ShowMore from './ShowMore';
 
-function MoviesCardList() {
+function MoviesCardList({ isSavedMovie }) {
+  const moviesList = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9
+  ]
   return (
     <>
       <ul className="movies-list">
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
-        <MovieCard />
+        {moviesList.map((movie, i) => <MovieCard key={i} isSavedMovie={isSavedMovie} />)}
       </ul>
       <ShowMore />
     </>
