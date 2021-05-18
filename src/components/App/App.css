@@ -24,19 +24,6 @@
   opacity: 0.7;
 }
 
-/* @media screen and (max-width: 1200px) {
-  .indent {
-    max-width: 750px;
-  }
-} */
-
-/* @media screen and (max-width: 890px) {
-  .indent {
-    max-width: 708px;
-    padding: 0 30px;
-  }
-} */
-
 @media screen and (max-width: 1024px) {
   .App {
     padding: 0 30px;
@@ -48,9 +35,3 @@
     padding: 0 10px;
   }
 }
-
-/* @media screen and (max-width: 767px) {
-  .App {
-    padding: 0 30px; 
-  }
-} */
