@@ -14,10 +14,28 @@ function Credentials({ isRegisterForm }) {
       <form className="credentials__form">
         <fieldset className="credentials__inputs">
           {isRegisterForm && (
-            <Input text="Имя" type="input" name="name" minLength={2} />
+            <Input
+              text="Имя"
+              placeholder="Имя"
+              type="input"
+              name="name"
+              minLength={2}
+            />
           )}
-          <Input text="E-mail" type="email" name="email" minLength={3} />
-          <Input text="Пароль" type="password" name="password" minLength={8} />
+          <Input
+            text="E-mail"
+            placeholder="email@email.com"
+            type="email"
+            name="email"
+            minLength={3}
+          />
+          <Input
+            text="Пароль"
+            placeholder="Пароль"
+            type="password"
+            name="password"
+            minLength={8}
+          />
         </fieldset>
       </form>
       <div className="credentials__button-wrapper">
