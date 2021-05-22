@@ -7,6 +7,7 @@ import Movies from "../Movies/Movies";
 import SavedMovies from "../SavedMovies/SavedMovies";
 import Profile from "../Profile/Profile";
 import Credentials from "../Credentials/Credentials";
+import NotFound from "./NotFound";
 
 function App() {
   return (
@@ -22,22 +23,25 @@ function App() {
           <Movies />
           <Footer />
         </Route>
+        <Route path="/saved-movies">
+          <Header />
+          <SavedMovies />
+          <Footer />
+        </Route>
+        <Route path="/profile">
+          <Header />
+          <Profile />
+        </Route>
+        <Route path="/signup">
+          <Credentials isRegisterForm />
+        </Route>
+        <Route path="/signin">
+          <Credentials />
+        </Route>
+        <Route path="*">
+          <NotFound />
+        </Route>
       </Switch>
-      <Route path="/saved-movies">
-        <Header />
-        <SavedMovies />
-        <Footer />
-      </Route>
-      <Route path="/profile">
-        <Header />
-        <Profile />
-      </Route>
-      <Route path="/signup">
-        <Credentials isRegisterForm />
-      </Route>
-      <Route path="/signin">
-        <Credentials />
-      </Route>
     </div>
   );
 }

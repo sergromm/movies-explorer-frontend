@@ -1,0 +1,43 @@
+.not-found {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 246px 0 60px;
+  box-sizing: border-box;
+  max-height: 700px;
+}
+
+.not-found__title {
+  font-size: 140px;
+  line-height: 1.2;
+  font-weight: 400;
+  margin: 0;
+}
+
+.not-found__text {
+  font-size: 16px;
+  line-height: 1.18;
+}
+
+.not-found__return {
+  font-size: 14px;
+  color: #4285f4;
+  text-decoration: none;
+  margin-top: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .not-found {
+    padding: 408px 0 222px;
+    max-height: 1024px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .not-found {
+    padding: 329px 0 30px;
+    max-height: 768px;
+  }
+}

@@ -58,7 +58,7 @@
 @media screen and (max-width: 425px) {
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 530px) {
   .about-project__container {
     flex-direction: column;
     margin: 60px 0;
