@@ -32,10 +32,10 @@ function App() {
         <Header />
         <Profile />
       </Route>
-      <Route path="/register">
+      <Route path="/signup">
         <Credentials isRegisterForm />
       </Route>
-      <Route path="/login">
+      <Route path="/signin">
         <Credentials />
       </Route>
     </div>

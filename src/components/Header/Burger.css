@@ -1,0 +1,19 @@
+.burger {
+  display: block;
+  background-image: url("../../images/icons/hamburger.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  width: 43px;
+  height: 40px;
+  padding: 12px 9px 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 1024px) {
+  .burger {
+    display: none;
+  }
+}

@@ -1,6 +1,7 @@
 import "./Credentials.css";
 import Input from "./Input";
 import logo from "../../images/icons/logo.svg";
+import { Link } from "react-router-dom";
 
 function Credentials({ isRegisterForm }) {
   return (
@@ -46,12 +47,12 @@ function Credentials({ isRegisterForm }) {
           {isRegisterForm
             ? "Уже зарегистрированы?"
             : "Ещё не зарегистрированы?"}
-          <a
+          <Link
             className="credentials__redirect opacity"
-            href={isRegisterForm ? "/login" : "/register"}
+            to={isRegisterForm ? "/login" : "/register"}
           >
             {isRegisterForm ? "Войти" : "Регистрация"}
-          </a>
+          </Link>
         </p>
       </div>
     </section>

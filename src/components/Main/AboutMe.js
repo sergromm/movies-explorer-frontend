@@ -3,7 +3,7 @@ import photo from "../../images/portfolio_photo.png";
 
 function AboutMe() {
   return (
-    <section className="about-me indent">
+    <section className="about-me indent" id="about-me">
       <h2 className="section-title">Студент</h2>
       <div className="about-me__container">
         <div className="about-me__wrapper">
