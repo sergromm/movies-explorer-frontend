@@ -1,17 +1,29 @@
+import { useState } from "react";
 import "./Profile.css";
 
 function Profile() {
+  const [name, setName] = useState("Виталий");
+  const [email, setEmail] = useState("pochta@uandex.ru");
+  const handleInputChange = (func) => (e) => func(e.target.value);
   return (
     <section className="profile">
       <h2 className="profile__title">Привет, Виталий!</h2>
       <ul className="profile__info">
         <li className="profile__item profile__item_name">
           <p className="profile__text">Имя</p>
-          <p className="profile__text">Виталий</p>
+          <input
+            className="profile__text"
+            value={name}
+            onChange={handleInputChange(setName)}
+          />
         </li>
         <li className="profile__item profile__item_email">
           <p className="profile__text">E-mail</p>
-          <p className="profile__text">pochta@uandex.ru</p>
+          <input
+            className="profile__text"
+            value={email}
+            onChange={handleInputChange(setEmail)}
+          />
         </li>
       </ul>
       <button className="profile__button profile__button_edit opacity">

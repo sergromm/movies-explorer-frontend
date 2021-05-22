@@ -37,6 +37,10 @@
   font-size: 11px;
   line-height: 1.18;
   margin: 0;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  text-align: right;
 }
 
 .profile__item_name {
