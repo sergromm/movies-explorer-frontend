@@ -1,0 +1,45 @@
+.movies-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 360px);
+  gap: 30px; /* отступ отличается от макета, потому что для всех блоков максимальная ширина 1140px */
+  align-self: center;
+  min-width: 300px;
+  max-width: 1140px;
+  width: 100%;
+  padding-top: 70px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (max-width: 1279px) {
+  .movies-list {
+    max-width: 750px;
+  }
+}
+
+@media screen and (max-width: 890px) {
+  .movies-list {
+    max-width: 708px;
+    grid-template-columns: repeat(auto-fit, 342px);
+    column-gap: 24px;
+    row-gap: 35px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .movies-list {
+    max-width: 668px;
+    grid-template-columns: repeat(auto-fit, 322px);
+    column-gap: 24px;
+    row-gap: 35px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .movies-list {
+    max-width: 300px;
+    grid-template-columns: repeat(auto-fit, 300px);
+    row-gap: 16px;
+  }
+}
