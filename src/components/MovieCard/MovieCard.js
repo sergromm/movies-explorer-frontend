@@ -1,8 +1,8 @@
-import './MovieCard.css';
-import image from '../../images/banksy.png';
-import React from 'react';
+import "./MovieCard.css";
+import image from "../../images/banksy.png";
+import React from "react";
 
-function MovieCard({ isSavedMovie }) {
+function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
   const [isSaved, setIsSaved] = React.useState(false);
 
   const handleSave = (evt) => {
@@ -13,20 +13,26 @@ function MovieCard({ isSavedMovie }) {
   return (
     <li className="movie">
       <div className="movie__header">
-        <h3 className="movie__title">В погоне за Бэнкси</h3>
+        <h3 className="movie__title">
+          {requestLangIsRU ? movie.nameRU : movie.nameEN}
+        </h3>
         <p className="movie__duration">27 минут</p>
       </div>
       <img className="movie__image" src={image} alt="В погоне за Бэнкси" />
-      {isSavedMovie
-        ? <button className="movie__button movie__button_remove opacity" />
-        : <button
+      {isSavedMovie ? (
+        <button className="movie__button movie__button_remove opacity" />
+      ) : (
+        <button
           onClick={handleSave}
-          className={`movie__button ${isSaved && 'movie__button_saved'} opacity`}>
-          {!isSaved && 'Сохранить'}
+          className={`movie__button ${
+            isSaved && "movie__button_saved"
+          } opacity`}
+        >
+          {!isSaved && "Сохранить"}
         </button>
-      }
+      )}
     </li>
   );
-};
+}
 
 export default MovieCard;

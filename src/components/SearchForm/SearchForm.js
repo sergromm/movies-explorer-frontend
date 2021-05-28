@@ -1,11 +1,25 @@
-import './SearchForm.css';
-import Switch from '../Switch/Switch';
+import "./SearchForm.css";
+import Switch from "../Switch/Switch";
+import { useForm } from "../../hooks/useForm";
 
-function SearchForm() {
+function SearchForm({ handleSearch }) {
+  const { values, handleChange } = useForm();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleSearch(values.search);
+  };
+
   return (
-    <form className="search">
+    <form onSubmit={(e) => handleSubmit(e)} className="search">
       <div className="search__field">
-        <input type="search" name="search" className="search__input" placeholder="Фильм" />
+        <input
+          onChange={handleChange}
+          type="search"
+          name="search"
+          className="search__input"
+          placeholder="Фильм"
+        />
         <button className="search__button opacity"></button>
       </div>
       <div className="search__switch-wrapper">
@@ -14,6 +28,6 @@ function SearchForm() {
       </div>
     </form>
   );
-};
+}
 
 export default SearchForm;
