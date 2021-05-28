@@ -13,7 +13,7 @@ import moviesApi from "../../utils/MoviesApi";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [movies, setMovies] = useState();
+  const [movies, setMovies] = useState([]);
   const [requestLangIsRU, setRequestLangIsRU] = useState();
   const [isLoading, setLoading] = useState(false);
 
