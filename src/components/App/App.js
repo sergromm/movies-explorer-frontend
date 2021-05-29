@@ -14,13 +14,13 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const [requestLangIsRU, setRequestLangIsRU] = useState();
+  const [requestLangIsRU, setRequestLangIsRU] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
   const searchInName = (name, param) =>
     name ? name.toLowerCase().includes(param.toLowerCase()) : "";
 
-  const refineSearch = (movie, param) => {
+  const refineFilter = (movie, param) => {
     const regexRU = /[А-я0-9]/gi;
 
     if (regexRU.test(param)) {
@@ -28,22 +28,45 @@ function App() {
       return searchInName(movie.nameRU, param);
     }
     setRequestLangIsRU(false);
+
     return searchInName(movie.nameEN, param);
   };
 
   const filterSearch = (movies, param) =>
-    movies.filter((movie) => refineSearch(movie, param));
+    movies.filter((movie) => refineFilter(movie, param));
 
+  const removeFromLocalStorage = (name) => localStorage.removeItem(name);
+
+  const saveToLocalStorage = (name, item) => {
+    localStorage.setItem(name, JSON.stringify(item));
+  };
+  // console.log(movies, JSON.parse(localStorage.getItem("movies")));
   const handleFilmSearch = (searchParam) => {
+    if (!searchParam) {
+      setMovies([]);
+      return removeFromLocalStorage("movies");
+    }
     setLoading(true);
-    moviesApi
+    return moviesApi
       .getFilmsList()
-      .then((movies) => {
-        setMovies(filterSearch(movies, searchParam));
+      .then((res) => {
+        console.log(movies, searchParam);
+        const searchResult = filterSearch(res, searchParam);
+        setMovies(searchResult);
+        saveToLocalStorage("movies", searchResult);
       })
       .catch(console.log)
       .finally(() => setLoading(false));
   };
+
+  const getMovies = () => {
+    const items = JSON.parse(localStorage.getItem("movies"));
+    if (items) {
+      setMovies(items);
+    }
+  };
+
+  useEffect(getMovies, []);
 
   // api
   //   .register("email@email.com", "password", "Роман")

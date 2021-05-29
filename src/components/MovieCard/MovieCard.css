@@ -52,8 +52,7 @@
 
 .movie__image {
   width: 100%;
-  min-height: 168px;
-  max-height: 200px;
+  min-height: 200px;
   height: auto;
 }
 
@@ -96,15 +95,9 @@
   box-shadow: 0 0 5px #ee3465;
 }
 
-@media screen and (max-width: 890px) {
-  .movie {
-    max-height: 309px;
-  }
-}
-
 @media screen and (max-width: 767px) {
-  .movie {
-    max-height: 271px;
+  .movie__image {
+    min-height: 168px;
   }
 
   .movie__button {
