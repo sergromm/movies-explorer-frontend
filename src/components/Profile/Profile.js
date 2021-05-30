@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Profile.css";
 
-function Profile() {
+function Profile({ handleSignOut }) {
   const [name, setName] = useState("Виталий");
   const [email, setEmail] = useState("pochta@uandex.ru");
   const handleInputChange = (func) => (e) => func(e.target.value);
@@ -29,7 +29,10 @@ function Profile() {
       <button className="profile__button profile__button_edit opacity">
         Редактировать
       </button>
-      <button className="profile__button profile__button_exit opacity">
+      <button
+        onClick={handleSignOut}
+        className="profile__button profile__button_exit opacity"
+      >
         Выйти из аккаунта
       </button>
     </section>

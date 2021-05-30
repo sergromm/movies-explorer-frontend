@@ -1,5 +1,5 @@
 import { Route, Switch, useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import "./App.css";
 import Header from "../Header/Header";
@@ -19,6 +19,7 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [requestLangIsRU, setRequestLangIsRU] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
 
   const searchInName = (name, param) =>
@@ -69,13 +70,15 @@ function App() {
     }
   };
 
-  const loginUser = (user) => {
-    if (user) {
-      setCurrenUser({ ...user });
-      history.push("/movies");
-      console.log(currentUser);
-    }
-  };
+  const loginUser = useCallback(
+    (user) => {
+      if (user) {
+        setCurrenUser(user);
+        history.push("/movies");
+      }
+    },
+    [history]
+  );
 
   const validateUser = () => {
     const token = localStorage.getItem("jwt");
@@ -95,7 +98,15 @@ function App() {
     mainApi.signIn(email, password).then((res) => {
       localStorage.setItem("jwt", `Bearer ${res.token}`);
       validateUser();
+      setLoggedIn(true);
     });
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+    history.push("/");
+    setCurrenUser(null);
   };
 
   // api
@@ -105,7 +116,21 @@ function App() {
 
   useEffect(getMovies, []);
 
-  useEffect(validateUser);
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      mainApi
+        .validateUser(token)
+        .then((user) => {
+          if (user) {
+            setCurrenUser(user);
+            setLoggedIn(true);
+            history.push("/movies");
+          }
+        })
+        .catch(console.log);
+    }
+  }, [history]);
 
   console.log(currentUser);
 
@@ -114,12 +139,12 @@ function App() {
       <div className="App">
         <Switch>
           <Route exact path="/">
-            <Header />
+            <Header isLoggedIn={isLoggedIn} />
             <Main />
             <Footer />
           </Route>
           <Route path="/movies">
-            <Header />
+            <Header isLoggedIn={isLoggedIn} />
             <Movies
               movies={movies}
               handleFilmSearch={handleFilmSearch}
@@ -129,13 +154,13 @@ function App() {
             <Footer />
           </Route>
           <Route path="/saved-movies">
-            <Header />
+            <Header isLoggedIn={isLoggedIn} />
             <SavedMovies />
             <Footer />
           </Route>
           <Route path="/profile">
-            <Header />
-            <Profile />
+            <Header isLoggedIn={isLoggedIn} />
+            <Profile handleSignOut={handleSignOut} />
           </Route>
           <Route path="/signup">
             <SignUp handleSubmit={handleSignUp} />

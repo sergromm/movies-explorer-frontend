@@ -15,7 +15,7 @@ function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
   const imageURL = movie.image ? url + movie.image.url : noImage;
 
   return (
-    <>
+    <div>
       {movie !== null && (
         <li className="movie">
           <div className="movie__header">
@@ -37,7 +37,7 @@ function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
           )}
         </li>
       )}
-    </>
+    </div>
   );
 }
 
