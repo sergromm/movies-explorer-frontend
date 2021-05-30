@@ -72,13 +72,14 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  likePost(isLiked, cardId) {
-    return fetch(`${this._url}/cards/${cardId}/likes`, {
+  saveMovie(token) {
+    return fetch(`${this._url}/movies`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: token,
       },
       credentials: "include",
-      method: isLiked ? "DELETE" : "PUT",
+      method: "POST",
     }).then(this._checkResponse);
   }
 
@@ -92,7 +93,7 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  register(email, password, name) {
+  signUp(email, password, name) {
     return fetch(`${this._url}/signup`, {
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +108,7 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  login(email, password) {
+  signIn(email, password) {
     return fetch(`${this._url}/signin`, {
       headers: {
         "Content-Type": "application/json",
@@ -120,20 +121,13 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  signout() {
-    return fetch(`${this._url}/signout`, {
-      method: "GET",
-      credentials: "include",
-    });
-  }
-
   validateUser(token) {
     return fetch(`${this._url}/users/me`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: token,
       },
       method: "GET",
-      credentials: "include",
     }).then(this._checkResponse);
   }
 }

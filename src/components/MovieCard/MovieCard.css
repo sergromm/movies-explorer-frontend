@@ -52,8 +52,9 @@
 
 .movie__image {
   width: 100%;
-  min-height: 200px;
-  height: auto;
+  max-height: 200px;
+  height: 100%;
+  object-fit: cover;
 }
 
 .movie__button {
@@ -97,7 +98,7 @@
 
 @media screen and (max-width: 767px) {
   .movie__image {
-    min-height: 168px;
+    max-height: 168px;
   }
 
   .movie__button {

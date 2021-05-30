@@ -1,5 +1,6 @@
 import "./MovieCard.css";
 import React from "react";
+import noImage from "../../images/icons/no-image.svg";
 
 function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
   const url = "https://api.nomoreparties.co";
@@ -11,9 +12,7 @@ function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
   };
 
   const name = requestLangIsRU ? movie.nameRU : movie.nameEN;
-  const imageURL = movie.image ? url + movie.image.url : null;
-
-  console.log(movie);
+  const imageURL = movie.image ? url + movie.image.url : noImage;
 
   return (
     <>

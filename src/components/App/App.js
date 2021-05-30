@@ -1,4 +1,6 @@
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import "./App.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -6,16 +8,18 @@ import Main from "../Main/Main";
 import Movies from "../Movies/Movies";
 import SavedMovies from "../SavedMovies/SavedMovies";
 import Profile from "../Profile/Profile";
-import Credentials from "../Credentials/Credentials";
 import NotFound from "./NotFound";
 import mainApi from "../../utils/MainApi";
 import moviesApi from "../../utils/MoviesApi";
-import { useEffect, useState } from "react";
+import SignUp from "../Credentials/SignUp";
+import SignIn from "../Credentials/SignIn";
 
 function App() {
+  const [currentUser, setCurrenUser] = useState();
   const [movies, setMovies] = useState([]);
   const [requestLangIsRU, setRequestLangIsRU] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const history = useHistory();
 
   const searchInName = (name, param) =>
     name ? name.toLowerCase().includes(param.toLowerCase()) : "";
@@ -40,7 +44,7 @@ function App() {
   const saveToLocalStorage = (name, item) => {
     localStorage.setItem(name, JSON.stringify(item));
   };
-  // console.log(movies, JSON.parse(localStorage.getItem("movies")));
+
   const handleFilmSearch = (searchParam) => {
     if (!searchParam) {
       setMovies([]);
@@ -50,7 +54,6 @@ function App() {
     return moviesApi
       .getFilmsList()
       .then((res) => {
-        console.log(movies, searchParam);
         const searchResult = filterSearch(res, searchParam);
         setMovies(searchResult);
         saveToLocalStorage("movies", searchResult);
@@ -66,51 +69,86 @@ function App() {
     }
   };
 
-  useEffect(getMovies, []);
+  const loginUser = (user) => {
+    if (user) {
+      setCurrenUser({ ...user });
+      history.push("/movies");
+      console.log(currentUser);
+    }
+  };
+
+  const validateUser = () => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      mainApi
+        .validateUser(token)
+        .then(loginUser)
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleSignUp = (email, password, name) => {
+    mainApi.signUp(email, password, name).then(console.log);
+  };
+
+  const handleSignIn = (email, password) => {
+    mainApi.signIn(email, password).then((res) => {
+      localStorage.setItem("jwt", `Bearer ${res.token}`);
+      validateUser();
+    });
+  };
 
   // api
   //   .register("email@email.com", "password", "Роман")
   //   .then(console.log)
   //   .catch(console.log);
 
+  useEffect(getMovies, []);
+
+  useEffect(validateUser);
+
+  console.log(currentUser);
+
   return (
-    <div className="App">
-      <Switch>
-        <Route exact path="/">
-          <Header />
-          <Main />
-          <Footer />
-        </Route>
-        <Route path="/movies">
-          <Header />
-          <Movies
-            movies={movies}
-            handleFilmSearch={handleFilmSearch}
-            isLoading={isLoading}
-            requestLangIsRU={requestLangIsRU}
-          />
-          <Footer />
-        </Route>
-        <Route path="/saved-movies">
-          <Header />
-          <SavedMovies />
-          <Footer />
-        </Route>
-        <Route path="/profile">
-          <Header />
-          <Profile />
-        </Route>
-        <Route path="/signup">
-          <Credentials isRegisterForm />
-        </Route>
-        <Route path="/signin">
-          <Credentials />
-        </Route>
-        <Route path="*">
-          <NotFound />
-        </Route>
-      </Switch>
-    </div>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="App">
+        <Switch>
+          <Route exact path="/">
+            <Header />
+            <Main />
+            <Footer />
+          </Route>
+          <Route path="/movies">
+            <Header />
+            <Movies
+              movies={movies}
+              handleFilmSearch={handleFilmSearch}
+              isLoading={isLoading}
+              requestLangIsRU={requestLangIsRU}
+            />
+            <Footer />
+          </Route>
+          <Route path="/saved-movies">
+            <Header />
+            <SavedMovies />
+            <Footer />
+          </Route>
+          <Route path="/profile">
+            <Header />
+            <Profile />
+          </Route>
+          <Route path="/signup">
+            <SignUp handleSubmit={handleSignUp} />
+          </Route>
+          <Route path="/signin">
+            <SignIn handleSubmit={handleSignIn} />
+          </Route>
+          <Route path="*">
+            <NotFound />
+          </Route>
+        </Switch>
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 
