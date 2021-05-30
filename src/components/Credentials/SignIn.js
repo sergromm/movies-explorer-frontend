@@ -2,11 +2,9 @@ import "./Credentials.css";
 import { useFormWithValidation } from "../../hooks/useForm";
 import Hero from "./Hero/Hero";
 import Form from "./Form/Form";
-import FormButton from "./FormButton/FormButton";
-import FieldSet from "./Form/FieldSet";
 
 function SignIn({ handleSubmit }) {
-  const { values, handleChange } = useFormWithValidation();
+  const { values, handleChange, errors, isValid } = useFormWithValidation();
   const { email, password } = values;
 
   const handleSignIn = (e) => {
@@ -22,6 +20,8 @@ function SignIn({ handleSubmit }) {
       type: "email",
       name: "email",
       minLength: 3,
+      errors: errors.email,
+      required: true,
     },
     {
       onChange: handleChange,
@@ -30,6 +30,8 @@ function SignIn({ handleSubmit }) {
       type: "password",
       name: "password",
       minLength: 5,
+      errors: errors.password,
+      required: true,
     },
   ];
 
@@ -39,6 +41,7 @@ function SignIn({ handleSubmit }) {
     question: "Ещё не зарегистрированы?",
     endpoint: "/signup",
     linkText: "Регистрация",
+    isValid,
   };
 
   return (

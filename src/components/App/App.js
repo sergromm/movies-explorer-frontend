@@ -43,7 +43,7 @@ function App() {
   const removeFromLocalStorage = (name) => localStorage.removeItem(name);
 
   const saveToLocalStorage = (name, item) => {
-    localStorage.setItem(name, JSON.stringify(item));
+    localStorage.setItem(name, item);
   };
 
   const handleFilmSearch = (searchParam) => {
@@ -57,7 +57,7 @@ function App() {
       .then((res) => {
         const searchResult = filterSearch(res, searchParam);
         setMovies(searchResult);
-        saveToLocalStorage("movies", searchResult);
+        saveToLocalStorage("movies", JSON.stringify(searchResult));
       })
       .catch(console.log)
       .finally(() => setLoading(false));
@@ -90,16 +90,16 @@ function App() {
     }
   };
 
-  const handleSignUp = (email, password, name) => {
-    mainApi.signUp(email, password, name).then(console.log);
-  };
-
   const handleSignIn = (email, password) => {
     mainApi.signIn(email, password).then((res) => {
-      localStorage.setItem("jwt", `Bearer ${res.token}`);
+      saveToLocalStorage("jwt", `Bearer ${res.token}`);
       validateUser();
       setLoggedIn(true);
     });
+  };
+
+  const handleSignUp = (email, password, name) => {
+    mainApi.signUp(email, password, name).then(console.log);
   };
 
   const handleSignOut = () => {
