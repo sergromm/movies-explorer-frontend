@@ -20,6 +20,7 @@ function App() {
   const [requestLangIsRU, setRequestLangIsRU] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
 
   const searchInName = (name, param) =>
@@ -49,6 +50,7 @@ function App() {
   const handleFilmSearch = (searchParam) => {
     if (!searchParam) {
       setMovies([]);
+      setErrorMessage("Введите поисковой запрос");
       return removeFromLocalStorage("movies");
     }
     setLoading(true);
@@ -99,7 +101,14 @@ function App() {
   };
 
   const handleSignUp = (email, password, name) => {
-    mainApi.signUp(email, password, name).then(console.log);
+    mainApi
+      .signUp(email, password, name)
+      .then((res) => {
+        if (res) {
+          handleSignIn(email, password);
+        }
+      })
+      .catch((err) => err.then(({ message }) => setErrorMessage(message)));
   };
 
   const handleSignOut = () => {
@@ -108,11 +117,6 @@ function App() {
     history.push("/");
     setCurrenUser(null);
   };
-
-  // api
-  //   .register("email@email.com", "password", "Роман")
-  //   .then(console.log)
-  //   .catch(console.log);
 
   useEffect(getMovies, []);
 
@@ -131,8 +135,6 @@ function App() {
         .catch(console.log);
     }
   }, [history]);
-
-  console.log(currentUser);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -163,10 +165,10 @@ function App() {
             <Profile handleSignOut={handleSignOut} />
           </Route>
           <Route path="/signup">
-            <SignUp handleSubmit={handleSignUp} />
+            <SignUp handleSubmit={handleSignUp} errorMessage={errorMessage} />
           </Route>
           <Route path="/signin">
-            <SignIn handleSubmit={handleSignIn} />
+            <SignIn handleSubmit={handleSignIn} errorMessage={errorMessage} />
           </Route>
           <Route path="*">
             <NotFound />

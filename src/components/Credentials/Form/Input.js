@@ -1,7 +1,6 @@
 import "./Input.css";
 
 function Input(props) {
-  console.log(props);
   return (
     <label className="credentials-input__label">
       {props.text}
@@ -13,6 +12,7 @@ function Input(props) {
         onChange={props.onChange}
         minLength={props.minLength}
         required={props.required}
+        pattern={props.pattern}
       />
       <p className="credentials-input__input-error">{props.errors}</p>
     </label>

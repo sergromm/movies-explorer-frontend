@@ -3,8 +3,8 @@ import { useFormWithValidation } from "../../hooks/useForm";
 import Hero from "./Hero/Hero";
 import Form from "./Form/Form";
 
-function SignUp({ handleSubmit }) {
-  const { values, handleChange } = useFormWithValidation();
+function SignUp({ handleSubmit, errorMessage }) {
+  const { values, handleChange, errors, isValid } = useFormWithValidation();
   const { email, password, name } = values;
 
   const signUpInputsProps = [
@@ -15,6 +15,9 @@ function SignUp({ handleSubmit }) {
       type: "input",
       name: "name",
       minLength: 2,
+      pattern: /[А-я\w-]/gi,
+      errors: errors.name,
+      required: true,
     },
     {
       onChange: handleChange,
@@ -23,6 +26,8 @@ function SignUp({ handleSubmit }) {
       type: "email",
       name: "email",
       minLength: 3,
+      errors: errors.email,
+      required: true,
     },
     {
       onChange: handleChange,
@@ -31,6 +36,8 @@ function SignUp({ handleSubmit }) {
       type: "password",
       name: "password",
       minLength: 5,
+      errors: errors.password,
+      required: true,
     },
   ];
 
@@ -45,6 +52,8 @@ function SignUp({ handleSubmit }) {
     question: "Уже зарегистрированы?",
     endpoint: "/signin",
     linkText: "Вход",
+    isValid,
+    error: errorMessage,
   };
 
   return (

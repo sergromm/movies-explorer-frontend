@@ -15,14 +15,16 @@ function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
   const imageURL = movie.image ? url + movie.image.url : noImage;
 
   return (
-    <div>
+    <>
       {movie !== null && (
         <li className="movie">
           <div className="movie__header">
             <h3 className="movie__title">{name}</h3>
             <p className="movie__duration">{movie.duration} мин</p>
           </div>
-          <img className="movie__image" src={imageURL} alt={name} />
+          <a className="movie__image" href="/movies">
+            <img className="movie__image" src={imageURL} alt={name} />
+          </a>
           {isSavedMovie ? (
             <button className="movie__button movie__button_remove opacity" />
           ) : (
@@ -37,7 +39,7 @@ function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
           )}
         </li>
       )}
-    </div>
+    </>
   );
 }
 
