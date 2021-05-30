@@ -15,12 +15,16 @@ import SignUp from "../Credentials/SignUp";
 import SignIn from "../Credentials/SignIn";
 
 function App() {
-  const [currentUser, setCurrenUser] = useState();
+  const [isSuccess, setSuccess] = useState(true);
   const [movies, setMovies] = useState([]);
   const [requestLangIsRU, setRequestLangIsRU] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [currentUser, setCurrenUser] = useState({
+    name: "",
+    email: "email@mail.com",
+  });
   const history = useHistory();
 
   const searchInName = (name, param) =>
@@ -111,6 +115,26 @@ function App() {
       .catch((err) => err.then(({ message }) => setErrorMessage(message)));
   };
 
+  const handleUserUpdate = useCallback(
+    (name, email) => {
+      const token = localStorage.getItem("jwt");
+      mainApi
+        .updateUserProfile(name, email, token)
+        .then(({ name, email }) => {
+          setCurrenUser({ ...currentUser, name, email });
+          setSuccess(true);
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err) {
+            setSuccess(false);
+            setErrorMessage("Не удалось обновить профиль");
+          }
+        });
+    },
+    [currentUser]
+  );
+
   const handleSignOut = () => {
     localStorage.removeItem("jwt");
     setLoggedIn(false);
@@ -162,7 +186,12 @@ function App() {
           </Route>
           <Route path="/profile">
             <Header isLoggedIn={isLoggedIn} />
-            <Profile handleSignOut={handleSignOut} />
+            <Profile
+              handleSignOut={handleSignOut}
+              handleUserUpdate={handleUserUpdate}
+              isSuccess={isSuccess}
+              errorMessage={errorMessage}
+            />
           </Route>
           <Route path="/signup">
             <SignUp handleSubmit={handleSignUp} errorMessage={errorMessage} />

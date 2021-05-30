@@ -32,16 +32,16 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  editUserProfile(username, description) {
+  updateUserProfile(name, email, token) {
     return fetch(`${this._url}/users/me`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: token,
       },
-      credentials: "include",
       method: "PATCH",
       body: JSON.stringify({
-        name: username,
-        about: description,
+        name,
+        email,
       }),
     }).then(this._checkResponse);
   }
