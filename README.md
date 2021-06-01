@@ -11,3 +11,11 @@
 `npm run cnc` - скрипт для создания компонентов.
 
 `npm run deploy` - скрипт сборки и деплоя проекта на сервер.
+
+## Ссылки
+
+https://movies.nomoredomains.club/movies - ссылка на фронтенд приложения.
+
+https://api-v1.movies.nomoredomains.club - ссылка на бэкэнд.
+
+84.252.143.199 - IP-Адрес.
