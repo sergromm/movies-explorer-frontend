@@ -10,7 +10,10 @@ function Profile({
   setErrorMessage,
 }) {
   const currentUser = useContext(CurrentUserContext);
-  const { values, handleChange, isValid, resetForm } = useFormWithValidation();
+  const { values, handleChange, isValid, resetForm } = useFormWithValidation({
+    name: currentUser.name,
+    email: currentUser.email,
+  });
   const { name, email } = values;
   const nameRegEx = "^[А-яA-z-_0-9]+$";
 
@@ -45,7 +48,7 @@ function Profile({
               name="name"
               className="profile__text"
               value={name}
-              onChange={onInputChange}
+              onChange={handleChange}
               pattern={nameRegEx}
               minLength={2}
               required
@@ -58,7 +61,7 @@ function Profile({
               name="email"
               className="profile__text"
               value={email}
-              onChange={onInputChange}
+              onChange={handleChange}
               minLength={3}
               required
             />

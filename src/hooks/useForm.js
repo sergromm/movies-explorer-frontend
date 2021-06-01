@@ -13,8 +13,8 @@ export function useForm() {
   return { values, handleChange, setValues };
 }
 
-export function useFormWithValidation() {
-  const [values, setValues] = React.useState({});
+export function useFormWithValidation(initialState) {
+  const [values, setValues] = React.useState(initialState);
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
 

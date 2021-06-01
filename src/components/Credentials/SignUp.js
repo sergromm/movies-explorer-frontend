@@ -4,7 +4,7 @@ import Hero from "./Hero/Hero";
 import Form from "./Form/Form";
 
 function SignUp({ handleSubmit, errorMessage, setErrorMessage }) {
-  const { values, handleChange, errors, isValid } = useFormWithValidation();
+  const { values, handleChange, errors, isValid } = useFormWithValidation({});
   const { email, password, name } = values;
 
   const onInputChange = (e) => {
