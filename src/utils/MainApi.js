@@ -66,7 +66,7 @@ class MainApi {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
-        country: movie.country,
+        country: movie.country || "N/A",
         director: movie.director,
         duration: movie.duration,
         year: movie.year,

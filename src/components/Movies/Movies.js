@@ -13,6 +13,7 @@ function Movies({
   handleSaveMovie,
   handleDeleteMovie,
   savedMovies,
+  handleShortFilmsToggle,
 }) {
   const { renderOptions, setShowOption } = useRenderOptions();
   const [renderSize, addToRender] = renderOptions;
@@ -46,7 +47,10 @@ function Movies({
 
   return (
     <main className="movies indent">
-      <SearchForm handleSearch={handleFilmSearch} />
+      <SearchForm
+        handleSearch={handleFilmSearch}
+        handleSwitch={handleShortFilmsToggle}
+      />
       {renderContent}
       {showMore}
       {failedRequest}

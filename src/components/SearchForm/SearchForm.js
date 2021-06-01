@@ -1,13 +1,24 @@
 import "./SearchForm.css";
 import Switch from "../Switch/Switch";
 import { useForm } from "../../hooks/useForm";
+import { useState } from "react";
 
-function SearchForm({ handleSearch }) {
+function SearchForm({ handleSearch, handleSwitch }) {
   const { values, handleChange } = useForm();
+  const [isShortMovies, setShortMovies] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleSearch(values.search);
+    handleSearch(values.search, isShortMovies);
+  };
+
+  const handleSwitchToggle = () => {
+    if (isShortMovies) {
+      setShortMovies(false);
+    } else {
+      setShortMovies(true);
+    }
+    handleSwitch(!isShortMovies);
   };
 
   return (
@@ -19,12 +30,16 @@ function SearchForm({ handleSearch }) {
           name="search"
           className="search__input"
           placeholder="Фильм"
+          minLength={1}
         />
         <button className="search__button opacity"></button>
       </div>
       <div className="search__switch-wrapper">
         <p className="search__switch-label">Короткометражки</p>
-        <Switch />
+        <Switch
+          handleToggle={handleSwitchToggle}
+          isShortMovies={isShortMovies}
+        />
       </div>
     </form>
   );

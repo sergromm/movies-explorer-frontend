@@ -1,6 +1,6 @@
 import "./MovieCard.css";
 import noImage from "../../images/icons/no-image.svg";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
 function MovieCard({
@@ -11,7 +11,6 @@ function MovieCard({
   handleDelete,
   savedMovies,
 }) {
-  const [isSavedButtonActive, setSavedButtonActive] = useState(false);
   const currentUser = useContext(CurrentUserContext);
   const url = "https://api.nomoreparties.co";
   const isSaved = movie.owner && movie.owner === currentUser._id;
@@ -20,12 +19,10 @@ function MovieCard({
 
   const handleSaveButton = () => {
     handleSave(movie);
-    setSavedButtonActive(true);
   };
 
   const handleDeleteButton = () => {
     handleDelete(movie);
-    setSavedButtonActive(false);
   };
 
   return (

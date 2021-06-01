@@ -29,21 +29,21 @@ function App() {
   });
   const history = useHistory();
 
-  const searchInName = (name, param) =>
-    name ? name.toLowerCase().includes(param.toLowerCase()) : "";
+  const searchInName = (name, query) =>
+    name ? name.toLowerCase().includes(query.toLowerCase()) : "";
 
-  const refineFilter = (movie, param) => {
+  const refineFilter = (movie, query) => {
     const regexRU = /[А-я0-9]/gi;
-    if (regexRU.test(param)) {
+    if (regexRU.test(query)) {
       setRequestLangIsRU(true);
-      return searchInName(movie.nameRU, param);
+      return searchInName(movie.nameRU, query);
     }
     setRequestLangIsRU(false);
-    return searchInName(movie.nameEN, param);
+    return searchInName(movie.nameEN, query);
   };
 
-  const filterSearch = (movies, param) =>
-    movies.filter((movie) => refineFilter(movie, param));
+  const filterSearch = (movies, query) =>
+    movies.filter((movie) => refineFilter(movie, query));
 
   const removeFromLocalStorage = (name) => localStorage.removeItem(name);
 
@@ -58,8 +58,27 @@ function App() {
     return setErrorMessage(message);
   };
 
-  const handleFilmSearch = (searchParam) => {
-    if (!searchParam) {
+  const getMovies = () => {
+    const items = JSON.parse(localStorage.getItem("movies"));
+    if (items) setMovies(items);
+  };
+
+  // ЗАТУП, не понял как сократить до одной функции, хотя и вижу что они одинаковые
+  const handleShortFilmsToggle = (isShortMovies) => {
+    const shortMovies = movies.filter((movie) => movie.duration <= 40);
+    if (isShortMovies) return setMovies(shortMovies);
+    return getMovies();
+  };
+
+  const handleSavedMoviesSwitch = (isShortMovies) => {
+    const savedMovies = JSON.parse(localStorage.getItem("saved-movies"));
+    const shortMovies = savedMovies.filter((movie) => movie.duration <= 40);
+    if (isShortMovies) return setSavedMovies(shortMovies);
+    return setSavedMovies(savedMovies);
+  };
+
+  const handleFilmSearch = (query, isShortMovies) => {
+    if (!query) {
       setMovies([]);
       setErrorMessage("Введите поисковой запрос");
       return removeFromLocalStorage("movies");
@@ -68,24 +87,29 @@ function App() {
     return moviesApi
       .getFilmsList()
       .then((res) => {
-        const searchResult = filterSearch(res, searchParam);
-        const newMovies = searchResult.map((result) => {
+        const searchResult = filterSearch(res, query);
+        const filterResuts = (result) => {
           const savedMovie = savedMovies.find(
             (movie) => movie.movieId === result.id
           );
           return savedMovie ? savedMovie : result;
-        });
+        };
+        const newMovies = searchResult.map(filterResuts);
+        const shortMovies = searchResult.filter(
+          (result) => result.duration <= 40
+        );
+        console.log(shortMovies);
         console.log(newMovies);
-        setMovies(newMovies);
+        console.log(isShortMovies);
+        if (isShortMovies) {
+          setMovies(shortMovies);
+        } else {
+          setMovies(newMovies);
+        }
         saveToLocalStorage("movies", JSON.stringify(newMovies));
       })
       .catch(console.log)
       .finally(() => setLoading(false));
-  };
-
-  const getMovies = () => {
-    const items = JSON.parse(localStorage.getItem("movies"));
-    if (items) setMovies(items);
   };
 
   const loginUser = useCallback(
@@ -160,9 +184,12 @@ function App() {
             (movie) => movie.owner === currentUser._id
           );
           setSavedMovies(newMovies);
+          saveToLocalStorage("saved-movies", JSON.stringify(newMovies));
         }
       })
-      .catch((err) => setErrorMessage("Не удалось получить список фильмов"))
+      .catch((err) => {
+        if (isLoggedIn) setErrorMessage("Не удалось получить список фильмов");
+      })
       .finally(() => setLoading(false));
   };
 
@@ -170,9 +197,12 @@ function App() {
     const token = localStorage.getItem("jwt");
     mainApi.saveMovie(movie, token).then((movie) => {
       const newMovies = movies.map((m) => (m.id === movie.movieId ? movie : m));
+      const newSavedMovies = [...savedMovies, movie];
+
       setMovies(newMovies);
-      setSavedMovies([...savedMovies, movie]);
       saveToLocalStorage("movies", JSON.stringify(newMovies));
+      setSavedMovies(newSavedMovies);
+      saveToLocalStorage("saved-movies", JSON.stringify(newSavedMovies));
     });
   };
 
@@ -188,6 +218,7 @@ function App() {
       setMovies(newMovies);
       saveToLocalStorage("movies", JSON.stringify(newMovies));
       setSavedMovies(newSavedMovies);
+      saveToLocalStorage("saved-movies", JSON.stringify(newSavedMovies));
     });
   };
 
@@ -195,7 +226,7 @@ function App() {
     moviesApi.getFilmsList().then(setMoviesData).catch(console.log);
   }, []);
   useEffect(validateUser, [history, loginUser]);
-  useEffect(getSavedMovies, [currentUser]);
+  useEffect(getSavedMovies, [currentUser, isLoggedIn]);
   useEffect(getMovies, [savedMovies]);
 
   return (
@@ -217,6 +248,7 @@ function App() {
               handleSaveMovie={handleSaveMovie}
               handleDeleteMovie={handleDeleteMovie}
               savedMovies={savedMovies}
+              handleShortFilmsToggle={handleShortFilmsToggle}
             />
             <Footer />
           </Route>
@@ -227,6 +259,7 @@ function App() {
               handleSaveMovie={handleSaveMovie}
               handleDeleteMovie={handleDeleteMovie}
               savedMovies={savedMovies}
+              handleShortFilmsToggle={handleSavedMoviesSwitch}
             />
             <Footer />
           </Route>

@@ -7,10 +7,15 @@ function SavedMovies({
   handleSaveMovie,
   handleDeleteMovie,
   savedMovies,
+  handleShortFilmsToggle,
+  handleFilmSearch,
 }) {
   return (
     <section className="saved-movies">
-      <SearchForm />
+      <SearchForm
+        handleSearch={handleFilmSearch}
+        handleSwitch={handleShortFilmsToggle}
+      />
       <MoviesCardList
         movies={movies}
         handleSaveMovie={handleSaveMovie}
