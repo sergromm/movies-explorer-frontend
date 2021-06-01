@@ -13,6 +13,7 @@ import mainApi from "../../utils/MainApi";
 import moviesApi from "../../utils/MoviesApi";
 import SignUp from "../Credentials/SignUp";
 import SignIn from "../Credentials/SignIn";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 function App() {
   const [moviesData, setMoviesData] = useState([]);
@@ -111,9 +112,7 @@ function App() {
         const shortMovies = searchResult.filter(
           (result) => result.duration <= 40
         );
-        console.log(shortMovies);
-        console.log(newMovies);
-        console.log(isShortMovies);
+
         if (isShortMovies) {
           setMovies(shortMovies);
         } else {
@@ -241,7 +240,7 @@ function App() {
   useEffect(validateUser, [history, loginUser]);
   useEffect(getSavedMovies, [currentUser, isLoggedIn]);
   useEffect(getMovies, [savedMovies]);
-  console.log(savedMovies);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -251,42 +250,41 @@ function App() {
             <Main />
             <Footer />
           </Route>
-          <Route path="/movies">
-            <Header isLoggedIn={isLoggedIn} />
-            <Movies
-              movies={movies}
-              handleFilmSearch={handleFilmSearch}
-              isLoading={isLoading}
-              requestLangIsRU={requestLangIsRU}
-              handleSaveMovie={handleSaveMovie}
-              handleDeleteMovie={handleDeleteMovie}
-              savedMovies={savedMovies}
-              handleShortFilmsToggle={handleShortFilmsToggle}
-            />
-            <Footer />
-          </Route>
-          <Route path="/saved-movies">
-            <Header isLoggedIn={isLoggedIn} />
-            <SavedMovies
-              movies={savedMovies}
-              handleFilmSearch={handleSavedMoviesSearch}
-              requestLangIsRU={requestLangIsRU}
-              handleSaveMovie={handleSaveMovie}
-              handleDeleteMovie={handleDeleteMovie}
-              savedMovies={savedMovies}
-              handleShortFilmsToggle={handleSavedMoviesSwitch}
-            />
-            <Footer />
-          </Route>
-          <Route path="/profile">
-            <Header isLoggedIn={isLoggedIn} />
-            <Profile
-              handleSignOut={handleSignOut}
-              handleUserUpdate={handleUserUpdate}
-              errorMessage={errorMessage}
-              setErrorMessage={setErrorMessage}
-            />
-          </Route>
+          <ProtectedRoute
+            path="/movies"
+            movies={movies}
+            handleFilmSearch={handleFilmSearch}
+            isLoading={isLoading}
+            requestLangIsRU={requestLangIsRU}
+            handleSaveMovie={handleSaveMovie}
+            component={Movies}
+            handleDeleteMovie={handleDeleteMovie}
+            savedMovies={savedMovies}
+            handleShortFilmsToggle={handleShortFilmsToggle}
+            isLoggedIn={isLoggedIn}
+          />
+          <ProtectedRoute
+            path="/saved-movies"
+            movies={savedMovies}
+            handleFilmSearch={handleSavedMoviesSearch}
+            requestLangIsRU={requestLangIsRU}
+            handleSaveMovie={handleSaveMovie}
+            handleDeleteMovie={handleDeleteMovie}
+            savedMovies={savedMovies}
+            handleShortFilmsToggle={handleSavedMoviesSwitch}
+            component={SavedMovies}
+            isLoggedIn={isLoggedIn}
+          />
+          <ProtectedRoute
+            path="/profile"
+            handleSignOut={handleSignOut}
+            handleUserUpdate={handleUserUpdate}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+            component={Profile}
+            isLoggedIn={isLoggedIn}
+            isProfilePage
+          />
           <Route path="/signup">
             <SignUp
               handleSubmit={handleSignUp}
