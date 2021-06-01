@@ -2,9 +2,11 @@ import "./Credentials.css";
 import { useFormWithValidation } from "../../hooks/useForm";
 import Hero from "./Hero/Hero";
 import Form from "./Form/Form";
+import { useEffect } from "react";
 
-function SignIn({ handleSubmit }) {
-  const { values, handleChange, errors, isValid } = useFormWithValidation();
+function SignIn({ handleSubmit, errorMessage, setErrorMessage }) {
+  const { values, handleChange, errors, resetForm, isValid } =
+    useFormWithValidation();
   const { email, password } = values;
 
   const handleSignIn = (e) => {
@@ -12,9 +14,17 @@ function SignIn({ handleSubmit }) {
     handleSubmit(email, password);
   };
 
+  const onInputChange = (e) => {
+    e.preventDefault();
+    handleChange(e);
+    setErrorMessage("");
+  };
+
+  useEffect(() => resetForm(), [resetForm]);
+
   const signInInputsProps = [
     {
-      onChange: handleChange,
+      onChange: onInputChange,
       text: "E-mail",
       placeholder: "email@email.com",
       type: "email",
@@ -24,7 +34,7 @@ function SignIn({ handleSubmit }) {
       required: true,
     },
     {
-      onChange: handleChange,
+      onChange: onInputChange,
       text: "Пароль",
       placeholder: "Пароль",
       type: "password",
@@ -42,6 +52,7 @@ function SignIn({ handleSubmit }) {
     endpoint: "/signup",
     linkText: "Регистрация",
     isValid,
+    error: errorMessage,
   };
 
   return (

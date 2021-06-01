@@ -1,18 +1,32 @@
 import "./MovieCard.css";
-import React from "react";
 import noImage from "../../images/icons/no-image.svg";
+import { useContext, useState } from "react";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
-function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
+function MovieCard({
+  movie,
+  isSavedMovie,
+  requestLangIsRU,
+  handleSave,
+  handleDelete,
+  savedMovies,
+}) {
+  const [isSavedButtonActive, setSavedButtonActive] = useState(false);
+  const currentUser = useContext(CurrentUserContext);
   const url = "https://api.nomoreparties.co";
-  const [isSaved, setIsSaved] = React.useState(false);
-
-  const handleSave = (evt) => {
-    evt.preventDefault();
-    isSaved ? setIsSaved(false) : setIsSaved(true);
-  };
-
+  const isSaved = movie.owner && movie.owner === currentUser._id;
   const name = requestLangIsRU ? movie.nameRU : movie.nameEN;
   const imageURL = movie.image ? url + movie.image.url : noImage;
+
+  const handleSaveButton = () => {
+    handleSave(movie);
+    setSavedButtonActive(true);
+  };
+
+  const handleDeleteButton = () => {
+    handleDelete(movie);
+    setSavedButtonActive(false);
+  };
 
   return (
     <>
@@ -23,13 +37,24 @@ function MovieCard({ movie, isSavedMovie, requestLangIsRU }) {
             <p className="movie__duration">{movie.duration} мин</p>
           </div>
           <a className="movie__image" href="/movies">
-            <img className="movie__image" src={imageURL} alt={name} />
+            <img
+              className="movie__image"
+              src={
+                isSavedMovie || typeof movie.image === "string"
+                  ? movie.image
+                  : imageURL
+              }
+              alt={name}
+            />
           </a>
           {isSavedMovie ? (
-            <button className="movie__button movie__button_remove opacity" />
+            <button
+              onClick={handleDeleteButton}
+              className="movie__button movie__button_remove opacity"
+            />
           ) : (
             <button
-              onClick={handleSave}
+              onClick={!isSaved ? handleSaveButton : handleDeleteButton}
               className={`movie__button ${
                 isSaved && "movie__button_saved"
               } opacity`}

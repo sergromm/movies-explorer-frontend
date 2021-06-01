@@ -3,11 +3,22 @@ import "./Profile.css";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import { useFormWithValidation } from "../../hooks/useForm";
 
-function Profile({ handleSignOut, handleUserUpdate, isSuccess, errorMessage }) {
+function Profile({
+  handleSignOut,
+  handleUserUpdate,
+  errorMessage,
+  setErrorMessage,
+}) {
   const currentUser = useContext(CurrentUserContext);
   const { values, handleChange, isValid, resetForm } = useFormWithValidation();
   const { name, email } = values;
   const nameRegEx = "^[А-яA-z-_0-9]+$";
+
+  const onInputChange = (e) => {
+    e.preventDefault();
+    handleChange(e);
+    setErrorMessage("");
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -16,7 +27,7 @@ function Profile({ handleSignOut, handleUserUpdate, isSuccess, errorMessage }) {
 
   useEffect(
     () => resetForm({ name: currentUser.name, email: currentUser.email }),
-    [resetForm, currentUser]
+    [resetForm, currentUser, handleUserUpdate]
   );
 
   const isNewInfo =
@@ -34,7 +45,7 @@ function Profile({ handleSignOut, handleUserUpdate, isSuccess, errorMessage }) {
               name="name"
               className="profile__text"
               value={name}
-              onChange={handleChange}
+              onChange={onInputChange}
               pattern={nameRegEx}
               minLength={2}
               required
@@ -47,13 +58,13 @@ function Profile({ handleSignOut, handleUserUpdate, isSuccess, errorMessage }) {
               name="email"
               className="profile__text"
               value={email}
-              onChange={handleChange}
+              onChange={onInputChange}
               minLength={3}
               required
             />
           </li>
         </ul>
-        <p className="profile__error">{errorMessage}</p>
+        <p className="profile__error">{isNewInfo && errorMessage}</p>
         <button
           type="submit"
           className="profile__button profile__button_edit opacity"

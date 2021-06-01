@@ -15,8 +15,9 @@ import SignUp from "../Credentials/SignUp";
 import SignIn from "../Credentials/SignIn";
 
 function App() {
-  const [isSuccess, setSuccess] = useState(true);
+  const [moviesData, setMoviesData] = useState([]);
   const [movies, setMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
   const [requestLangIsRU, setRequestLangIsRU] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -24,6 +25,7 @@ function App() {
   const [currentUser, setCurrenUser] = useState({
     name: "",
     email: "email@mail.com",
+    savedMovies: [],
   });
   const history = useHistory();
 
@@ -32,13 +34,11 @@ function App() {
 
   const refineFilter = (movie, param) => {
     const regexRU = /[А-я0-9]/gi;
-
     if (regexRU.test(param)) {
       setRequestLangIsRU(true);
       return searchInName(movie.nameRU, param);
     }
     setRequestLangIsRU(false);
-
     return searchInName(movie.nameEN, param);
   };
 
@@ -49,6 +49,13 @@ function App() {
 
   const saveToLocalStorage = (name, item) => {
     localStorage.setItem(name, item);
+  };
+
+  const handleRequestError = ({ message, validation }) => {
+    if (validation) {
+      return setErrorMessage(validation.body.message);
+    }
+    return setErrorMessage(message);
   };
 
   const handleFilmSearch = (searchParam) => {
@@ -62,8 +69,15 @@ function App() {
       .getFilmsList()
       .then((res) => {
         const searchResult = filterSearch(res, searchParam);
-        setMovies(searchResult);
-        saveToLocalStorage("movies", JSON.stringify(searchResult));
+        const newMovies = searchResult.map((result) => {
+          const savedMovie = savedMovies.find(
+            (movie) => movie.movieId === result.id
+          );
+          return savedMovie ? savedMovie : result;
+        });
+        console.log(newMovies);
+        setMovies(newMovies);
+        saveToLocalStorage("movies", JSON.stringify(newMovies));
       })
       .catch(console.log)
       .finally(() => setLoading(false));
@@ -71,14 +85,13 @@ function App() {
 
   const getMovies = () => {
     const items = JSON.parse(localStorage.getItem("movies"));
-    if (items) {
-      setMovies(items);
-    }
+    if (items) setMovies(items);
   };
 
   const loginUser = useCallback(
     (user) => {
       if (user) {
+        setLoggedIn(true);
         setCurrenUser(user);
         history.push("/movies");
       }
@@ -97,68 +110,93 @@ function App() {
   };
 
   const handleSignIn = (email, password) => {
-    mainApi.signIn(email, password).then((res) => {
-      saveToLocalStorage("jwt", `Bearer ${res.token}`);
-      validateUser();
-      setLoggedIn(true);
-    });
+    mainApi
+      .signIn(email, password)
+      .then((res) => {
+        saveToLocalStorage("jwt", `Bearer ${res.token}`);
+        validateUser();
+        setLoggedIn(true);
+      })
+      .catch((err) => err.then(handleRequestError));
   };
 
   const handleSignUp = (email, password, name) => {
     mainApi
       .signUp(email, password, name)
       .then((res) => {
-        if (res) {
-          handleSignIn(email, password);
-        }
+        if (res) handleSignIn(email, password);
       })
-      .catch((err) => err.then(({ message }) => setErrorMessage(message)));
+      .catch((err) => err.then(handleRequestError));
   };
 
-  const handleUserUpdate = useCallback(
-    (name, email) => {
-      const token = localStorage.getItem("jwt");
-      mainApi
-        .updateUserProfile(name, email, token)
-        .then(({ name, email }) => {
-          setCurrenUser({ ...currentUser, name, email });
-          setSuccess(true);
-        })
-        .catch((err) => {
-          console.log(err);
-          if (err) {
-            setSuccess(false);
-            setErrorMessage("Не удалось обновить профиль");
-          }
-        });
-    },
-    [currentUser]
-  );
+  const handleUserUpdate = (name, email) => {
+    const token = localStorage.getItem("jwt");
+    mainApi
+      .updateUserProfile(name, email, token)
+      .then(({ name, email }) => {
+        setCurrenUser({ ...currentUser, name, email });
+      })
+      .catch((err) => {
+        if (err) setErrorMessage("Не удалось обновить профиль");
+      });
+  };
 
   const handleSignOut = () => {
     localStorage.removeItem("jwt");
     setLoggedIn(false);
     history.push("/");
     setCurrenUser(null);
+    setErrorMessage("");
   };
 
-  useEffect(getMovies, []);
+  const getSavedMovies = () => {
+    const token = localStorage.getItem("jwt");
+    mainApi
+      .getSavedMovies(token)
+      .then((movies) => {
+        setLoading(true);
+        if (movies) {
+          const newMovies = movies.filter(
+            (movie) => movie.owner === currentUser._id
+          );
+          setSavedMovies(newMovies);
+        }
+      })
+      .catch((err) => setErrorMessage("Не удалось получить список фильмов"))
+      .finally(() => setLoading(false));
+  };
+
+  const handleSaveMovie = (movie) => {
+    const token = localStorage.getItem("jwt");
+    mainApi.saveMovie(movie, token).then((movie) => {
+      const newMovies = movies.map((m) => (m.id === movie.movieId ? movie : m));
+      setMovies(newMovies);
+      setSavedMovies([...savedMovies, movie]);
+      saveToLocalStorage("movies", JSON.stringify(newMovies));
+    });
+  };
+
+  const handleDeleteMovie = (movie) => {
+    const token = localStorage.getItem("jwt");
+    mainApi.deleteSavedMovie(token, movie._id).then((movie) => {
+      const replacement = moviesData.find((m) => m.id === movie.movieId);
+      const newSavedMovies = savedMovies.filter((m) => m._id !== movie._id);
+      const newMovies = movies.map((m) =>
+        m.movieId === replacement.id ? replacement : m
+      );
+
+      setMovies(newMovies);
+      saveToLocalStorage("movies", JSON.stringify(newMovies));
+      setSavedMovies(newSavedMovies);
+    });
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      mainApi
-        .validateUser(token)
-        .then((user) => {
-          if (user) {
-            setCurrenUser(user);
-            setLoggedIn(true);
-            history.push("/movies");
-          }
-        })
-        .catch(console.log);
-    }
-  }, [history]);
+    moviesApi.getFilmsList().then(setMoviesData).catch(console.log);
+  }, []);
+  useEffect(validateUser, [history, loginUser]);
+  useEffect(getSavedMovies, [currentUser]);
+  useEffect(getMovies, [savedMovies]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -176,12 +214,20 @@ function App() {
               handleFilmSearch={handleFilmSearch}
               isLoading={isLoading}
               requestLangIsRU={requestLangIsRU}
+              handleSaveMovie={handleSaveMovie}
+              handleDeleteMovie={handleDeleteMovie}
+              savedMovies={savedMovies}
             />
             <Footer />
           </Route>
           <Route path="/saved-movies">
             <Header isLoggedIn={isLoggedIn} />
-            <SavedMovies />
+            <SavedMovies
+              movies={savedMovies}
+              handleSaveMovie={handleSaveMovie}
+              handleDeleteMovie={handleDeleteMovie}
+              savedMovies={savedMovies}
+            />
             <Footer />
           </Route>
           <Route path="/profile">
@@ -189,15 +235,23 @@ function App() {
             <Profile
               handleSignOut={handleSignOut}
               handleUserUpdate={handleUserUpdate}
-              isSuccess={isSuccess}
               errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
             />
           </Route>
           <Route path="/signup">
-            <SignUp handleSubmit={handleSignUp} errorMessage={errorMessage} />
+            <SignUp
+              handleSubmit={handleSignUp}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            />
           </Route>
           <Route path="/signin">
-            <SignIn handleSubmit={handleSignIn} errorMessage={errorMessage} />
+            <SignIn
+              handleSubmit={handleSignIn}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            />
           </Route>
           <Route path="*">
             <NotFound />

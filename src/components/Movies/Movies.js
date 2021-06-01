@@ -5,7 +5,15 @@ import Preloader from "../Preloader/Preloader";
 import ShowMore from "../MoviesCardList/ShowMore";
 import useRenderOptions from "../../hooks/useWindowResize";
 
-function Movies({ movies, handleFilmSearch, isLoading, requestLangIsRU }) {
+function Movies({
+  movies,
+  handleFilmSearch,
+  isLoading,
+  requestLangIsRU,
+  handleSaveMovie,
+  handleDeleteMovie,
+  savedMovies,
+}) {
   const { renderOptions, setShowOption } = useRenderOptions();
   const [renderSize, addToRender] = renderOptions;
 
@@ -20,6 +28,9 @@ function Movies({ movies, handleFilmSearch, isLoading, requestLangIsRU }) {
       movies={movies}
       requestLangIsRU={requestLangIsRU}
       renderSize={renderSize}
+      handleSaveMovie={handleSaveMovie}
+      handleDeleteMovie={handleDeleteMovie}
+      savedMovies={savedMovies}
     />
   );
 

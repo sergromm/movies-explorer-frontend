@@ -1,7 +1,8 @@
 class MainApi {
   constructor() {
-    this._url = "https://api-v1.movies.nomoredomains.club";
-    // this._url = "http://localhost:3001";
+    // this._url = "https://api-v1.movies.nomoredomains.club";
+    this._ImageUrl = "https://api.nomoreparties.co";
+    this._url = "http://localhost:3001";
   }
 
   _checkResponse(response) {
@@ -22,13 +23,23 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  getInitialCards() {
-    return fetch(`${this._url}/cards`, {
+  getSavedMovies(token) {
+    return fetch(`${this._url}/movies`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: token,
       },
-      credentials: "include",
       method: "GET",
+    }).then(this._checkResponse);
+  }
+
+  deleteSavedMovie(token, movieId) {
+    return fetch(`${this._url}/movies/${movieId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      method: "DELETE",
     }).then(this._checkResponse);
   }
 
@@ -46,34 +57,7 @@ class MainApi {
     }).then(this._checkResponse);
   }
 
-  setAvatar(link) {
-    return fetch(`${this._url}/users/me/avatar`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      method: "PATCH",
-      body: JSON.stringify({
-        avatar: link,
-      }),
-    }).then(this._checkResponse);
-  }
-
-  addNewPost(name, link) {
-    return fetch(`${this._url}/cards`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      method: "POST",
-      body: JSON.stringify({
-        name: name,
-        link: link,
-      }),
-    }).then(this._checkResponse);
-  }
-
-  saveMovie(token) {
+  saveMovie(movie, token) {
     return fetch(`${this._url}/movies`, {
       headers: {
         "Content-Type": "application/json",
@@ -81,6 +65,19 @@ class MainApi {
       },
       credentials: "include",
       method: "POST",
+      body: JSON.stringify({
+        country: movie.country,
+        director: movie.director,
+        duration: movie.duration,
+        year: movie.year,
+        description: movie.description,
+        image: this._ImageUrl + movie.image.url,
+        trailer: movie.trailerLink,
+        thumbnail: this._ImageUrl + movie.image.formats.thumbnail.url,
+        movieId: movie.id,
+        nameRU: movie.nameRU,
+        nameEN: movie.nameEN,
+      }),
     }).then(this._checkResponse);
   }
 

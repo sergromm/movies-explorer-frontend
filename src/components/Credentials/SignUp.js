@@ -3,24 +3,35 @@ import { useFormWithValidation } from "../../hooks/useForm";
 import Hero from "./Hero/Hero";
 import Form from "./Form/Form";
 
-function SignUp({ handleSubmit, errorMessage }) {
+function SignUp({ handleSubmit, errorMessage, setErrorMessage }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
   const { email, password, name } = values;
 
+  const onInputChange = (e) => {
+    e.preventDefault();
+    handleChange(e);
+    setErrorMessage("");
+  };
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    handleSubmit(email, password, name);
+  };
+
   const signUpInputsProps = [
     {
-      onChange: handleChange,
+      onChange: onInputChange,
       text: "Имя",
       placeholder: "Имя",
       type: "input",
       name: "name",
       minLength: 2,
-      pattern: /[А-я\w-]/gi,
+      pattern: "^[А-яA-z-_0-9]+$",
       errors: errors.name,
       required: true,
     },
     {
-      onChange: handleChange,
+      onChange: onInputChange,
       text: "E-mail",
       placeholder: "email@email.com",
       type: "email",
@@ -30,7 +41,7 @@ function SignUp({ handleSubmit, errorMessage }) {
       required: true,
     },
     {
-      onChange: handleChange,
+      onChange: onInputChange,
       text: "Пароль",
       placeholder: "Пароль",
       type: "password",
@@ -40,11 +51,6 @@ function SignUp({ handleSubmit, errorMessage }) {
       required: true,
     },
   ];
-
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    handleSubmit(email, password, name);
-  };
 
   const signUpButtonProps = {
     handleClick: handleSignUp,
