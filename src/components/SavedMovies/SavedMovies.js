@@ -15,6 +15,7 @@ function SavedMovies({
       <SearchForm
         handleSearch={handleFilmSearch}
         handleSwitch={handleShortFilmsToggle}
+        movies={savedMovies}
       />
       <MoviesCardList
         movies={movies}

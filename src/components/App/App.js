@@ -70,11 +70,24 @@ function App() {
     return getMovies();
   };
 
-  const handleSavedMoviesSwitch = (isShortMovies) => {
-    const savedMovies = JSON.parse(localStorage.getItem("saved-movies"));
-    const shortMovies = savedMovies.filter((movie) => movie.duration <= 40);
+  const handleSavedMoviesSwitch = (isShortMovies, movies) => {
+    const shortMovies = movies.filter((movie) => movie.duration <= 40);
     if (isShortMovies) return setSavedMovies(shortMovies);
-    return setSavedMovies(savedMovies);
+    return setSavedMovies(JSON.parse(localStorage.getItem("saved-movies")));
+  };
+
+  const handleSavedMoviesSearch = (query, isShortMovies) => {
+    if (!query) {
+      setSavedMovies(JSON.parse(localStorage.getItem("saved-movies")));
+      setErrorMessage("Введите поисковой запрос");
+    }
+    const searchResult = filterSearch(savedMovies, query);
+    saveToLocalStorage("saved-movies", JSON.stringify(searchResult));
+    const shortSavedMovies = searchResult.filter(
+      (result) => result.duration <= 40
+    );
+    if (isShortMovies) return setSavedMovies(shortSavedMovies);
+    return setSavedMovies(searchResult);
   };
 
   const handleFilmSearch = (query, isShortMovies) => {
@@ -228,7 +241,7 @@ function App() {
   useEffect(validateUser, [history, loginUser]);
   useEffect(getSavedMovies, [currentUser, isLoggedIn]);
   useEffect(getMovies, [savedMovies]);
-
+  console.log(savedMovies);
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -256,6 +269,8 @@ function App() {
             <Header isLoggedIn={isLoggedIn} />
             <SavedMovies
               movies={savedMovies}
+              handleFilmSearch={handleSavedMoviesSearch}
+              requestLangIsRU={requestLangIsRU}
               handleSaveMovie={handleSaveMovie}
               handleDeleteMovie={handleDeleteMovie}
               savedMovies={savedMovies}
