@@ -1,8 +1,8 @@
 class MainApi {
   constructor() {
-    // this._url = "https://api-v1.movies.nomoredomains.club";
+    this._url = "https://api-v1.movies.nomoredomains.club";
     this._ImageUrl = "https://api.nomoreparties.co";
-    this._url = "http://localhost:3001";
+    // this._url = "http://localhost:3001";
   }
 
   _checkResponse(response) {
@@ -78,16 +78,6 @@ class MainApi {
         nameRU: movie.nameRU,
         nameEN: movie.nameEN,
       }),
-    }).then(this._checkResponse);
-  }
-
-  deletePost(cardId) {
-    return fetch(`${this._url}/cards/${cardId}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      method: "DELETE",
     }).then(this._checkResponse);
   }
 
