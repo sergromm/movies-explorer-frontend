@@ -5,7 +5,7 @@ import Navigation from "../Navigation/Navigation";
 import Burger from "./Burger";
 import { useState } from "react";
 
-function Header({ isLoggedIn = true }) {
+function Header({ isLoggedIn = false }) {
   const [isNavigationVisible, setIsNavigationVisible] = useState(false);
   const handleClose = () => {
     setIsNavigationVisible(false);
@@ -23,7 +23,9 @@ function Header({ isLoggedIn = true }) {
           <Link to="/signup" className="header__register opacity">
             Регистрация
           </Link>
-          <button className="header__login opacity">Войти</button>
+          <Link to="/signin" className="header__login opacity">
+            Войти
+          </Link>
         </div>
       ) : (
         <>

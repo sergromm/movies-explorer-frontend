@@ -3,6 +3,7 @@
   position: relative;
   min-width: 36px;
   height: 20px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .switch__button {
@@ -20,7 +21,7 @@
   bottom: 0;
   border-radius: 50px;
   background-color: #343434;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 .switch__slider:before {
@@ -32,7 +33,7 @@
   left: 2px;
   bottom: 2px;
   background-color: #a0a0a0;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .switch__button:checked + .switch__slider::before {
@@ -40,15 +41,15 @@
 }
 
 .switch__button:checked + .switch__slider {
-  background-color: #3DDC84;
+  background-color: #3ddc84;
 }
 
 .switch__button:focus + .switch__slider {
-  box-shadow: 0 0 4px .5px #4285F4;
+  box-shadow: 0 0 4px 0.5px #4285f4;
 }
 
 .switch__button:focus:checked + .switch__slider {
-  box-shadow: 0 0 4px .5px #4285F4;
+  box-shadow: 0 0 4px 0.5px #4285f4;
 }
 
 .switch__button:checked + .switch__slider:before {

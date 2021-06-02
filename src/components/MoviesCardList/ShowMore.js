@@ -1,9 +1,11 @@
-import './ShowMore.css'
+import "./ShowMore.css";
 
-function ShowMore() {
-  return(
-    <button className="show-more opacity">Ещё</button>
+function ShowMore({ handleClick }) {
+  return (
+    <button onClick={handleClick} className="show-more opacity">
+      Ещё
+    </button>
   );
-};
+}
 
 export default ShowMore;

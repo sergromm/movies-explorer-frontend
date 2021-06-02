@@ -6,6 +6,11 @@
   width: 100%;
 }
 
+.profile__form {
+  display: flex;
+  flex-direction: column;
+}
+
 .profile__title {
   font-size: 24;
   line-height: 1.2;
@@ -60,6 +65,27 @@
   gap: 16px;
   cursor: pointer;
   padding: 0;
+}
+
+.profile__button:disabled {
+  background-color: transparent;
+  border: none;
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  line-height: 1.23;
+  cursor: not-allowed;
+}
+
+.profile__error {
+  text-align: center;
+  visibility: visible;
+  font-size: 11px;
+  line-height: 1.23;
+  color: #ee3465;
+  opacity: 1;
+  margin: 0;
+  min-height: 33px;
 }
 
 .profile__button_exit {

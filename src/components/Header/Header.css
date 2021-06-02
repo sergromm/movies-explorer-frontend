@@ -24,11 +24,16 @@
 }
 
 .header__login {
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  display: inline-block;
+  padding-top: 10px;
   background-color: #3ddc84;
   border: none;
   border-radius: 3px;
   margin-left: 30px;
   width: 72px;
-  height: 32px;
+  height: 25px;
   cursor: pointer;
 }

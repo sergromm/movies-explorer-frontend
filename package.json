@@ -17,6 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "deploy": "npm run build && scp -r ./build/* sergromm@84.252.143.199:/home/sergromm/movies-explorer/movies-explorer-frontend",
     "cnc": "node ./src/scripts/index.js"
   },
   "eslintConfig": {

@@ -12,6 +12,7 @@
   -moz-osx-font-smoothing: grayscale;
   padding: 0 61.5px; /* изменить ширину для promo и techs */
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .opacity {
